@@ -6,7 +6,7 @@ from PIL import Image
 
 def detect_img(yolo):
     #while True:
-    img_path = input('Input image path:')
+    img_path = 'images/in/'
     imge_files=os.listdir(img_path)
     for img in imge_files:
         path=os.path.join(img_path,img)
@@ -16,7 +16,7 @@ def detect_img(yolo):
             print('Open Error! Try again!')
             continue
         else:
-            print(image.filename.split('\\')[-1])
+            print(image.filename.split('/')[-1])
             r_image = yolo.detect_image(image)
             #r_image.show()
     yolo.close_session()

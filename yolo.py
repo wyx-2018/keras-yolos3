@@ -132,7 +132,7 @@ class YOLO(object):
                     size=np.floor(3e-2 * image.size[1] + 0.5).astype('int32'))
         thickness = (image.size[0] + image.size[1]) // 300
         coco={}
-        file_name=image.filename.split('\\')[-1]
+        file_name=image.filename.split('/')[-1]
         for i, c in reversed(list(enumerate(out_classes))):
             predicted_class = self.class_names[c]
             box = out_boxes[i]
@@ -168,7 +168,7 @@ class YOLO(object):
             nodename=self.get_class_name_from_filename(file_name)
             xmlname = file_name.replace('.jpg','.xml')
             vehicle=['car','bus','truck']
-            if predicted_class in vehicle and score>0.8 and (right-left)>=1/4*image.width and (bottom-top)>=1/4*image.height:
+            if predicted_class in vehicle and score>0.8 and (right-left)>=1/3*image.width and (bottom-top)>=1/3*image.height:
 	            if xmlname in coco:
 	            # object
 	                Createnode = coco[xmlname]
@@ -299,9 +299,9 @@ class YOLO(object):
 	                node.appendChild(Createnode.createTextNode(str(bottom)))
 	                bndbox_node.appendChild(node)
 	                coco[xmlname] = Createnode
-        image_out_path=os.path.join('F:/vehicle-detection/out/',file_name)
+        image_out_path=os.path.join('images/out/',file_name)
         image.save(image_out_path,quality=90)
-        xml_path='F:/vehicle-detection/Annotations/xmls/'
+        xml_path='images/xmls/'
         if coco:
             with open(xml_path+xmlname,'w') as f:
                 f.write(coco[xmlname].toprettyxml(indent = '\t'))
@@ -309,7 +309,7 @@ class YOLO(object):
         # print(end - start)
         return image
     def get_class_name_from_filename(self,filename):
-        labels_path='F:/vehicle-detection/labels.txt'
+        labels_path='images/labels.txt'
         with open(labels_path,encoding='utf-8') as f:
             label_names = f.readlines()
         label_names = [c.strip() for c in label_names]
