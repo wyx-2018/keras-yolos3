@@ -1,19 +1,31 @@
 import xml.etree.ElementTree as ET
 from os import getcwd
+import re
 
 sets=[('2007', 'train'), ('2007', 'val'), ('2007', 'test')]
 
-classes = ["aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train", "tvmonitor"]
+# classes = ["aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train", "tvmonitor"]
 
+labels_path='F:/vehicle-detection/labels.txt'
+with open(labels_path,'rb') as f:
+    label_names = f.readlines()
+    classes = [c.decode('utf-8').split(':')[0] for c in label_names]
 
 def convert_annotation(year, image_id, list_file):
-    in_file = open('VOCdevkit/VOC%s/Annotations/%s.xml'%(year, image_id))
-    tree=ET.parse(in_file)
-    root = tree.getroot()
+    print(image_id)
+    try:
+        in_file = open('VOCdevkit/VOC%s/Annotations/%s.xml'%(year, image_id),'rb').read().decode('gbk')
+    except:
+        in_file = open('VOCdevkit/VOC%s/Annotations/%s.xml'%(year, image_id),'rb').read().decode('utf-8')
+    match = re.match(r'([a-zA-Z0-9\_]+[\_])([0-9]+)', image_id, re.I)
+    cls = match.groups()[1]
+    root = ET.XML(in_file)
+    # tree=ET.parse(in_file)
+    # root = tree.getroot()
 
     for obj in root.iter('object'):
         difficult = obj.find('difficult').text
-        cls = obj.find('name').text
+        # cls = obj.find('name').text
         if cls not in classes or int(difficult)==1:
             continue
         cls_id = classes.index(cls)

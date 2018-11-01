@@ -167,8 +167,8 @@ class YOLO(object):
 
             nodename=self.get_class_name_from_filename(file_name)
             xmlname = file_name.replace('.jpg','.xml')
-            vehicle=['car','bus','truck']
-            if predicted_class in vehicle and score>0.8 and (right-left)>=1/3*image.width and (bottom-top)>=1/3*image.height:
+            vehicle=['car']
+            if predicted_class in vehicle and score>0.6 and ((right-left)>=1/3*image.width or (bottom-top)>=1/3*image.height):
 	            if xmlname in coco:
 	            # object
 	                Createnode = coco[xmlname]
@@ -317,7 +317,7 @@ class YOLO(object):
         nodenum=match.groups()[1]
         for label_name in label_names:
             if nodenum==label_name.split(':')[0]:
-                return label_name.split(':')[1]
+                return label_name.split(':')[0]
 
     def close_session(self):
         self.sess.close()
