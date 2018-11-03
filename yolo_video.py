@@ -6,22 +6,22 @@ from PIL import Image
 
 def detect_img(yolo):
     #while True:
-    xml_path = 'F:/vehicle-detection/Annotations/xmls/'
+    # xml_path = 'F:/vehicle-detection/Annotations/xmls/'
     img_path = 'images/in/'
     imge_files=os.listdir(img_path)
     for img in imge_files:
         path=os.path.join(img_path,img)
-        xmlname=img.replace('.jpg','.xml')
+        # xmlname=img.replace('.jpg','.xml')
         try:
             image = Image.open(path)
         except:
             print('Open Error! Try again!')
             continue
         else:
-            xmlpath=os.path.join(xml_path,xmlname)
-            if not os.path.exists(xmlpath):
-                print(image.filename.split('/')[-1])
-                r_image = yolo.detect_image(image)
+            # xmlpath=os.path.join(xml_path,xmlname)
+            # if not os.path.exists(xmlpath):
+            print(image.filename.split('/')[-1])
+            r_image = yolo.detect_image(image)
             #r_image.show()
     yolo.close_session()
 

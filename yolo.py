@@ -133,13 +133,15 @@ class YOLO(object):
         thickness = (image.size[0] + image.size[1]) // 300
         coco={}
         file_name=image.filename.split('/')[-1]
+        image_draw=np.zeros(image.size,np.uint8)
+        image_draw=image.copy()
         for i, c in reversed(list(enumerate(out_classes))):
             predicted_class = self.class_names[c]
             box = out_boxes[i]
             score = out_scores[i]
 
             label = '{} {:.2f}'.format(predicted_class, score)
-            draw = ImageDraw.Draw(image)
+            draw = ImageDraw.Draw(image_draw)
             label_size = draw.textsize(label, font)
 
             top, left, bottom, right = box
@@ -149,162 +151,164 @@ class YOLO(object):
             right = min(image.size[0], np.floor(right + 0.5).astype('int32'))
             print(label, (left, top), (right, bottom))
             
-            if top - label_size[1] >= 0:
-                text_origin = np.array([left, top - label_size[1]])
-            else:
-                text_origin = np.array([left, top + 1])
-
-            # My kingdom for a good redistributable image drawing library.
-            for i in range(thickness):
+            
+            # nodename=self.get_class_name_from_filename(file_name)
+            # xmlname = file_name.replace('.jpg','.xml')
+            vehicle=['car','truck']
+            if predicted_class in vehicle and score>0.65 and ((right-left)>=1/4*image.width and (bottom-top)>=1/4*image.height):
+                image1=image.crop((left,top,right,bottom))
+                newname=file_name.replace('.jpg','%s.jpg'%('-'+str(i)))
+                image1.save('images/crop/%s' % newname)
+                # My kingdom for a good redistributable image drawing library.
+                if top - label_size[1] >= 0:
+                    text_origin = np.array([left, top - label_size[1]])
+                else:
+                    text_origin = np.array([left, top + 1])
+                for i in range(thickness):
+                    draw.rectangle(
+                        [left + i, top + i, right - i, bottom - i],
+                        outline=self.colors[c])
                 draw.rectangle(
-                    [left + i, top + i, right - i, bottom - i],
-                    outline=self.colors[c])
-            draw.rectangle(
-                [tuple(text_origin), tuple(text_origin + label_size)],
-                fill=self.colors[c])
-            draw.text(text_origin, label, fill=(0, 0, 0), font=font)
-            del draw
-
-            nodename=self.get_class_name_from_filename(file_name)
-            xmlname = file_name.replace('.jpg','.xml')
-            vehicle=['car']
-            if predicted_class in vehicle and score>0.6 and ((right-left)>=1/3*image.width or (bottom-top)>=1/3*image.height):
-	            if xmlname in coco:
-	            # object
-	                Createnode = coco[xmlname]
-	                object_node=Createnode.createElement('object')
-	                Root.appendChild(object_node)
+                    [tuple(text_origin), tuple(text_origin + label_size)],
+                    fill=self.colors[c])
+                draw.text(text_origin, label, fill=(0, 0, 0), font=font)
+                del draw
+	            # if xmlname in coco:
+	            # # object
+	            #     Createnode = coco[xmlname]
+	            #     object_node=Createnode.createElement('object')
+	            #     Root.appendChild(object_node)
 	                
-	                node=Createnode.createElement('name')
-	                node.appendChild(Createnode.createTextNode(nodename))
-	                object_node.appendChild(node)
+	            #     node=Createnode.createElement('name')
+	            #     node.appendChild(Createnode.createTextNode(nodename))
+	            #     object_node.appendChild(node)
 	                
-	                node=Createnode.createElement('pose')
-	                node.appendChild(Createnode.createTextNode('Unspecified'))
-	                object_node.appendChild(node)
+	            #     node=Createnode.createElement('pose')
+	            #     node.appendChild(Createnode.createTextNode('Unspecified'))
+	            #     object_node.appendChild(node)
 	                
-	                node=Createnode.createElement('truncated')
-	                node.appendChild(Createnode.createTextNode('0'))
-	                object_node.appendChild(node)
+	            #     node=Createnode.createElement('truncated')
+	            #     node.appendChild(Createnode.createTextNode('0'))
+	            #     object_node.appendChild(node)
 	                
-	                node=Createnode.createElement('difficult')
-	                node.appendChild(Createnode.createTextNode('0'))
-	                object_node.appendChild(node)
+	            #     node=Createnode.createElement('difficult')
+	            #     node.appendChild(Createnode.createTextNode('0'))
+	            #     object_node.appendChild(node)
 	                
-	                bndbox_node=Createnode.createElement('bndbox')
-	                object_node.appendChild(bndbox_node)
+	            #     bndbox_node=Createnode.createElement('bndbox')
+	            #     object_node.appendChild(bndbox_node)
 	                
-	                node=Createnode.createElement('xmin')
-	                node.appendChild(Createnode.createTextNode(str(left)))
-	                bndbox_node.appendChild(node)
+	            #     node=Createnode.createElement('xmin')
+	            #     node.appendChild(Createnode.createTextNode(str(left)))
+	            #     bndbox_node.appendChild(node)
 	                
-	                node=Createnode.createElement('ymin')
-	                node.appendChild(Createnode.createTextNode(str(top)))
-	                bndbox_node.appendChild(node)
+	            #     node=Createnode.createElement('ymin')
+	            #     node.appendChild(Createnode.createTextNode(str(top)))
+	            #     bndbox_node.appendChild(node)
 	                
-	                node=Createnode.createElement('xmax')
-	                node.appendChild(Createnode.createTextNode(str(right)))
-	                bndbox_node.appendChild(node)
+	            #     node=Createnode.createElement('xmax')
+	            #     node.appendChild(Createnode.createTextNode(str(right)))
+	            #     bndbox_node.appendChild(node)
 	                
-	                node=Createnode.createElement('ymax')
-	                node.appendChild(Createnode.createTextNode(str(bottom)))
-	                bndbox_node.appendChild(node)
-	            else:
-	                #Produce xml for each image
-	                Createnode=Document()  #创建DOM文档对象
+	            #     node=Createnode.createElement('ymax')
+	            #     node.appendChild(Createnode.createTextNode(str(bottom)))
+	            #     bndbox_node.appendChild(node)
+	            # else:
+	            #     #Produce xml for each image
+	            #     Createnode=Document()  #创建DOM文档对象
 	                    
-	                Root=Createnode.createElement('annotation') #创建根元素
-	                Createnode.appendChild(Root)
+	            #     Root=Createnode.createElement('annotation') #创建根元素
+	            #     Createnode.appendChild(Root)
 	                
-	                # folder
-	                folder=Createnode.createElement('folder')
-	                folder.appendChild(Createnode.createTextNode('images'))
-	                Root.appendChild(folder)
+	            #     # folder
+	            #     folder=Createnode.createElement('folder')
+	            #     folder.appendChild(Createnode.createTextNode('images'))
+	            #     Root.appendChild(folder)
 	                
-	                # filename
-	                filename = Createnode.createElement('filename')
-	                filename.appendChild(Createnode.createTextNode(file_name))
-	                Root.appendChild(filename)
+	            #     # filename
+	            #     filename = Createnode.createElement('filename')
+	            #     filename.appendChild(Createnode.createTextNode(file_name))
+	            #     Root.appendChild(filename)
 
-	                # path
-	                path = Createnode.createElement('path')
-	                path.appendChild(Createnode.createTextNode(image.filename))
-	                Root.appendChild(path)
+	            #     # path
+	            #     path = Createnode.createElement('path')
+	            #     path.appendChild(Createnode.createTextNode(image.filename))
+	            #     Root.appendChild(path)
 	                
-	                # source
-	                source_node = Createnode.createElement('source')
-	                Root.appendChild(source_node)
+	            #     # source
+	            #     source_node = Createnode.createElement('source')
+	            #     Root.appendChild(source_node)
 	                
-	                node = Createnode.createElement('database')
-	                node.appendChild(Createnode.createTextNode('Unknown'))
-	                source_node.appendChild(node)
+	            #     node = Createnode.createElement('database')
+	            #     node.appendChild(Createnode.createTextNode('Unknown'))
+	            #     source_node.appendChild(node)
 	                
-	                # size
-	                size_node=Createnode.createElement('size')
-	                Root.appendChild(size_node)
+	            #     # size
+	            #     size_node=Createnode.createElement('size')
+	            #     Root.appendChild(size_node)
 	                
-	                node=Createnode.createElement('width')
-	                node.appendChild(Createnode.createTextNode(str(image.size[0])))
-	                size_node.appendChild(node)
+	            #     node=Createnode.createElement('width')
+	            #     node.appendChild(Createnode.createTextNode(str(image.size[0])))
+	            #     size_node.appendChild(node)
 	                
-	                node=Createnode.createElement('height');
-	                node.appendChild(Createnode.createTextNode(str(image.size[1])))
-	                size_node.appendChild(node)
+	            #     node=Createnode.createElement('height');
+	            #     node.appendChild(Createnode.createTextNode(str(image.size[1])))
+	            #     size_node.appendChild(node)
 	                
-	                node=Createnode.createElement('depth')
-	                node.appendChild(Createnode.createTextNode('3'))
-	                size_node.appendChild(node)
+	            #     node=Createnode.createElement('depth')
+	            #     node.appendChild(Createnode.createTextNode('3'))
+	            #     size_node.appendChild(node)
 	                
-	                # segmented
-	                node=Createnode.createElement('segmented')
-	                node.appendChild(Createnode.createTextNode('0'))
-	                Root.appendChild(node)
+	            #     # segmented
+	            #     node=Createnode.createElement('segmented')
+	            #     node.appendChild(Createnode.createTextNode('0'))
+	            #     Root.appendChild(node)
 	                
-	                # object
-	                object_node=Createnode.createElement('object')
-	                Root.appendChild(object_node)
+	            #     # object
+	            #     object_node=Createnode.createElement('object')
+	            #     Root.appendChild(object_node)
 	                
-	                node=Createnode.createElement('name')
-	                node.appendChild(Createnode.createTextNode(nodename))
-	                object_node.appendChild(node)
+	            #     node=Createnode.createElement('name')
+	            #     node.appendChild(Createnode.createTextNode(nodename))
+	            #     object_node.appendChild(node)
 	                
-	                node=Createnode.createElement('pose')
-	                node.appendChild(Createnode.createTextNode('Unspecified'))
-	                object_node.appendChild(node)
+	            #     node=Createnode.createElement('pose')
+	            #     node.appendChild(Createnode.createTextNode('Unspecified'))
+	            #     object_node.appendChild(node)
 	                
-	                node=Createnode.createElement('truncated')
-	                node.appendChild(Createnode.createTextNode('0'))
-	                object_node.appendChild(node)
+	            #     node=Createnode.createElement('truncated')
+	            #     node.appendChild(Createnode.createTextNode('0'))
+	            #     object_node.appendChild(node)
 	                
-	                node=Createnode.createElement('difficult')
-	                node.appendChild(Createnode.createTextNode('0'))
-	                object_node.appendChild(node)
+	            #     node=Createnode.createElement('difficult')
+	            #     node.appendChild(Createnode.createTextNode('0'))
+	            #     object_node.appendChild(node)
 	                
-	                bndbox_node=Createnode.createElement('bndbox')
-	                object_node.appendChild(bndbox_node)
+	            #     bndbox_node=Createnode.createElement('bndbox')
+	            #     object_node.appendChild(bndbox_node)
 	                
-	                node=Createnode.createElement('xmin')
-	                node.appendChild(Createnode.createTextNode(str(left)))
-	                bndbox_node.appendChild(node)
+	            #     node=Createnode.createElement('xmin')
+	            #     node.appendChild(Createnode.createTextNode(str(left)))
+	            #     bndbox_node.appendChild(node)
 	                
-	                node=Createnode.createElement('ymin')
-	                node.appendChild(Createnode.createTextNode(str(top)))
-	                bndbox_node.appendChild(node)
+	            #     node=Createnode.createElement('ymin')
+	            #     node.appendChild(Createnode.createTextNode(str(top)))
+	            #     bndbox_node.appendChild(node)
 	                
-	                node=Createnode.createElement('xmax')
-	                node.appendChild(Createnode.createTextNode(str(right)))
-	                bndbox_node.appendChild(node)
+	            #     node=Createnode.createElement('xmax')
+	            #     node.appendChild(Createnode.createTextNode(str(right)))
+	            #     bndbox_node.appendChild(node)
 	                
-	                node=Createnode.createElement('ymax')
-	                node.appendChild(Createnode.createTextNode(str(bottom)))
-	                bndbox_node.appendChild(node)
-	                coco[xmlname] = Createnode
+	            #     node=Createnode.createElement('ymax')
+	            #     node.appendChild(Createnode.createTextNode(str(bottom)))
+	            #     bndbox_node.appendChild(node)
+	            #     coco[xmlname] = Createnode
         image_out_path=os.path.join('images/out/',file_name)
-        image.save(image_out_path,quality=90)
-        xml_path='images/xmls/'
-        if coco:
-            with open(xml_path+xmlname,'w') as f:
-                f.write(coco[xmlname].toprettyxml(indent = '\t'))
+        image_draw.save(image_out_path,quality=90)
+        # xml_path='images/xmls/'
+        # if coco:
+        #     with open(xml_path+xmlname,'w') as f:
+        #         f.write(coco[xmlname].toprettyxml(indent = '\t'))
         # end = timer()
         # print(end - start)
         return image
