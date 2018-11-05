@@ -1,3 +1,9 @@
+#!/bin/bash
+# 查找脚本所在路径，并进入
+#DIR="$( cd "$( dirname "$0"  )" && pwd  )"
+DIR=$PWD
+cd $DIR
+echo current dir is $PWD
 data_dir=/data/wyx-123456/yolov3
 config_dir=./yolov3.cfg
 weights=yolov3.weights
