@@ -14,8 +14,8 @@ img_path=VOCdevkit/VOC2007/JPEGImages
 weights_path=$output_dir/$weights
 
 cp $dataset_dir/$preweights $weights_path
-cp $dataset_dir/JPEGImages.zip VOCdevkit/VOC2007
-unzip -f VOCdevkit/VOC2007/JPEGImages.zip -d $img_path
+
+unzip -f $dataset_dir/JPEGImages.zip -d $img_path
 python train.py
 # python convert.py -w $cfg_path $weights_path $pretrain_weights
 # python convert.py -w yolov3.cfg $weights_path $train_weights
