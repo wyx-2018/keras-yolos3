@@ -16,6 +16,7 @@ cfg_path=$output_dir/$cfg
 pretrain_weights=model_data/darknet53_weights.h5
 
 cp $dataset_dir/$weights $weights_path
+cp $dataset_dir/$weights $cfg_path
 
 python convert.py -w $cfg_path $weights_path $pretrain_weights
 # python convert.py -w yolov3.cfg $weights_path $train_weights
