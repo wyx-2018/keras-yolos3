@@ -24,7 +24,7 @@ import sys
 defaultencoding = 'utf-8'
 if sys.getdefaultencoding() != defaultencoding:
   reload(sys)
-  sys.setdefaultencoding(defaultencoding
+  sys.setdefaultencoding(defaultencoding)
 
 parser = argparse.ArgumentParser(description='Darknet To Keras Converter.')
 parser.add_argument('config_path', help='Path to Darknet cfg file.')
