@@ -11,9 +11,10 @@ dataset_dir=/data/wyx-123456/yolov3
 weights=yolov3.weights
 output_dir=/output
 weights_path=$output_dir/$weights
+train_weights=$output_dir/yolo_weights.h5
 
 cp $dataset_dir/$weights $weights_path
 
-python ./convert.py -w yolov3.cfg $weights_path model_data/yolo_weights.h5
+python convert.py -w yolov3.cfg $weights_path $train_weights
 # python yolo_video.py
 # python train.py
