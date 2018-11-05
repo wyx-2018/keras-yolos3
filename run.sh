@@ -8,17 +8,17 @@ echo current dir is $PWD
 export PYTHONPATH=$PYTHONPATH:$DIR
 
 dataset_dir=/data/wyx-123456/yolov3
-weights=darknet53.weights
-cfg=darknet53.cfg
+preweights=darknet53_weights.h5
 output_dir=/output
+img_path=$dataset_dir/JPEGImages.zip
 weights_path=$output_dir/$weights
-cfg_path=$output_dir/$cfg
-pretrain_weights=model_data/darknet53_weights.h5
 
-cp $dataset_dir/$weights $weights_path
-cp $dataset_dir/$weights $cfg_path
+cp $dataset_dir/$preweights $weights_path
 
-python convert.py -w $cfg_path $weights_path $pretrain_weights
+unzip $img_path -d VOCdevkit/VOC2007
+
+python train.py
+# python convert.py -w $cfg_path $weights_path $pretrain_weights
 # python convert.py -w yolov3.cfg $weights_path $train_weights
 # python yolo_video.py
 # python train.py
