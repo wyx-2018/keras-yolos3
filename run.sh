@@ -4,6 +4,9 @@
 DIR=$PWD
 cd $DIR
 echo current dir is $PWD
+# 设置目录，避免module找不到的问题
+export PYTHONPATH=$PYTHONPATH:$DIR
+
 data_dir=/data/wyx-123456/yolov3
 config_dir=./yolov3.cfg
 weights=yolov3.weights
