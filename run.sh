@@ -11,6 +11,6 @@ weights_dir=./yolov3.weights
 output_dir=model_data/yolo_weights.h5
 
 cp $data_dir/$weights ./
-python convert.py -w config_path=$config_dir weights_path=$weights_dir/$weights output_path=$output_dir
+python convert.py -w config_path=$config_dir weights_path=$weights_dir output_path=$output_dir
 # python yolo_video.py
 # python train.py
