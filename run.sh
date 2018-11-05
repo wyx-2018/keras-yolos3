@@ -8,13 +8,16 @@ echo current dir is $PWD
 export PYTHONPATH=$PYTHONPATH:$DIR
 
 dataset_dir=/data/wyx-123456/yolov3
-weights=yolov3.weights
+weights=darknet53.weights
+cfg=darknet53.cfg
 output_dir=/output
 weights_path=$output_dir/$weights
-train_weights=$output_dir/yolo_weights.h5
+cfg_path=$output_dir/$cfg
+pretrain_weights=model_data/darknet53_weights.h5
 
 cp $dataset_dir/$weights $weights_path
 
-python convert.py -w yolov3.cfg $weights_path $train_weights
+python convert.py -w $cfg_path $weights_path $pretrain_weights
+# python convert.py -w yolov3.cfg $weights_path $train_weights
 # python yolo_video.py
 # python train.py
