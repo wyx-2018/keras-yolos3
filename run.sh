@@ -7,13 +7,14 @@ echo current dir is $PWD
 # 设置目录，避免module找不到的问题
 export PYTHONPATH=$PYTHONPATH:$DIR
 
-data_dir=/data/wyx-123456/yolov3
+dataset_dir=/data/wyx-123456/yolov3
 config_dir=./yolov3.cfg
 weights=yolov3.weights
-weights_dir=./yolov3.weights
-output_dir=model_data/yolo_weights.h5
+#weights_dir=./yolov3.weights
+#output_dir=model_data/yolo_weights.h5
 
-cp $data_dir/$weights ./
-python convert.py -w config_path=$config_dir weights_path=$weights_dir output_path=$output_dir
+cp $dataset_dir/$weights $DIR/$weights
+
+python ./convert.py -w yolov3.cfg yolov3.weights model_data/yolo_weights.h5
 # python yolo_video.py
 # python train.py
