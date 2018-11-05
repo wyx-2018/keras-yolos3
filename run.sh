@@ -15,7 +15,7 @@ weights_path=$output_dir/$weights
 
 cp $dataset_dir/$preweights $weights_path
 
-unzip -f $dataset_dir/JPEGImages.zip -d $img_path
+unzip -vf $dataset_dir/JPEGImages.zip -d $img_path
 
 python voc_annotation.py
 python train.py
