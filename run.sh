@@ -8,13 +8,12 @@ echo current dir is $PWD
 export PYTHONPATH=$PYTHONPATH:$DIR
 
 dataset_dir=/data/wyx-123456/yolov3
-config_dir=./yolov3.cfg
 weights=yolov3.weights
-#weights_dir=./yolov3.weights
-#output_dir=model_data/yolo_weights.h5
+output_dir=/output
+weights_path=$output_dir/$weights
 
-cp $dataset_dir/$weights $DIR/$weights
+cp $dataset_dir/$weights $weights_path
 
-python ./convert.py -w yolov3.cfg yolov3.weights model_data/yolo_weights.h5
+python ./convert.py -w yolov3.cfg $weights_path model_data/yolo_weights.h5
 # python yolo_video.py
 # python train.py
