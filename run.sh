@@ -11,12 +11,11 @@ export PYTHONPATH=$PYTHONPATH:$DIR
 dataset_dir=/data/wyx-123456/yolov3
 preweights=darknet53_weights.h5
 output_dir=/output
-img_path=VOCdevkit/VOC2007
 weights_path=$output_dir/$weights
 
 cp $dataset_dir/$preweights $weights_path
 
-unzip -o $dataset_dir/JPEGImages.zip -d $img_path
+unzip -o $dataset_dir/JPEGImages.zip -d $output_dir
 
 python voc_annotation.py
 python train.py
