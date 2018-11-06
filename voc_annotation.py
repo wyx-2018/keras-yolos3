@@ -12,7 +12,7 @@ with open(labels_path,'rb') as f:
     classes = [c.decode('utf-8').split(':')[0] for c in label_names]
 
 def convert_annotation(year, image_id, list_file):
-    print(image_id)
+#     print(image_id)
     try:
         in_file = open('VOCdevkit/VOC%s/Annotations/%s.xml'%(year, image_id),'rb').read().decode('gbk')
     except:
