@@ -58,7 +58,7 @@ def get_anchors(anchors_path):
     return np.array(anchors).reshape(-1, 2)
  
 def create_model(input_shape, anchors, num_classes, load_pretrained=False, freeze_body=False,
-            weights_path='/data/wyx-123456/yolov3/darknet53_weights.h5'):
+            weights_path='/output/darknet53_weights.h5'):
     K.clear_session() # get a new session
     image_input = Input(shape=(None, None, 3))
     h, w = input_shape
