@@ -13,7 +13,7 @@ preweights=darknet53_weights.h5
 output_dir=/output
 weights_path=$output_dir/$preweights
 
-cp $dataset_dir/$preweights $weights_path
+# cp $dataset_dir/$preweights $weights_path
 
 unzip -oq $dataset_dir/JPEGImages.zip -d $output_dir
 # python test.py
