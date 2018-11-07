@@ -46,7 +46,7 @@ def train(model, annotation_path, input_shape, anchors, num_classes, log_dir='lo
     model.save_weights(log_dir + 'trained_weights.h5')
  
 def get_classes(classes_path):
-    with open(classes_path) as f:
+    with open(classes_path,encoding='utf-8') as f:
         class_names = f.readlines()
     class_names = [c.strip() for c in class_names]
     return class_names
