@@ -4,7 +4,7 @@
 DIR=$PWD
 cd $DIR
 echo current dir is $PWD
-echo $(uname -a)
+echo $(who)
 # 设置目录，避免module找不到的问题
 export PYTHONPATH=$PYTHONPATH:$DIR
 
@@ -16,6 +16,6 @@ weights_path=$output_dir/$preweights
 cp $dataset_dir/$preweights $weights_path
 
 unzip -oq $dataset_dir/JPEGImages.zip -d $output_dir
-python test.py
+# python test.py
 python voc_annotation.py
-sudo python train.py
+python train.py
