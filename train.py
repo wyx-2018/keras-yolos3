@@ -19,7 +19,7 @@ def _main():
     class_names = get_classes(classes_path)
     anchors = get_anchors(anchors_path)
     input_shape = (416,416) # multiple of 32, hw
-    model = create_model(input_shape, anchors, len(class_names) )
+    model = create_model(input_shape, anchors, load_pretrained=True, len(class_names) )
     train(model, annotation_path, input_shape, anchors, len(class_names), log_dir=log_dir)
  
 def train(model, annotation_path, input_shape, anchors, num_classes, log_dir='logs/'):
@@ -41,7 +41,7 @@ def train(model, annotation_path, input_shape, anchors, num_classes, log_dir='lo
             steps_per_epoch=max(1, num_train//batch_size),
             validation_data=data_generator_wrap(lines[num_train:], batch_size, input_shape, anchors, num_classes),
             validation_steps=max(1, num_val//batch_size),
-            epochs=9,
+            epochs=50,
             initial_epoch=0)
     model.save_weights(log_dir + 'trained_weights.h5')
  
