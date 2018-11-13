@@ -18,7 +18,7 @@ def _main():
     anchors_path = 'model_data/yolo_anchors.txt'
     class_names = get_classes(classes_path)
     anchors = get_anchors(anchors_path)
-    input_shape = (432,320) # multiple of 32, hw
+    input_shape = (416,416) # multiple of 32, hw
     model = create_model(input_shape, anchors, len(class_names) )
     train(model, annotation_path, input_shape, anchors, len(class_names), log_dir=log_dir)
  
